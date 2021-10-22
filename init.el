@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
+   '(doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -21,6 +21,8 @@
 (tool-bar-mode -1)
 (tooltip-mode -1)
 (set-fringe-mode 10)
+
+(setq split-width-threshold 1 )
 
 (menu-bar-mode -1)
 
@@ -78,6 +80,8 @@
   :ensure t
   :init (doom-modeline-mode 1))
 
+(use-package doom-themes)
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -96,20 +100,18 @@
 	 ("C-x b" . counsel-ibuffer)
 	 ("C-x C-f" . counsel-find-file)
 	 :map minibuffer-local-map
-	 ("C-r" . 'counsel-minibuffer-history))
-  :config
-  (setq ivy-initial-inputs-alist nil))
+	 ("C-r" . 'counsel-minibuffer-history)))
 
 (use-package helpful
-  :ensure t
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :custom
-  (setq counsel-describe-function-function #'helpful-callable)
-  (setq counsel-describe-variable-function #'helpful-variable)
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-fuction] . counsel-describe-function)
+  ([remap describe-function] . counsel-describe-function)
   ([remap describe-command] . helpful-command)
-  ([remap describe-varible] . counsel-describe-varible)
-  ([remap describe-key]. helpful-key))
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
 
 (add-hook 'c-mode-common-hook
   (lambda()
