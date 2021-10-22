@@ -30,8 +30,6 @@
 
 (set-face-attribute 'default nil :height 120)
 
-(load-theme 'tango-dark)
-
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 (require 'package)
@@ -80,7 +78,8 @@
   :ensure t
   :init (doom-modeline-mode 1))
 
-(use-package doom-themes)
+(use-package doom-themes
+  :init (load-theme 'doom-dracula t))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -91,10 +90,6 @@
   :config
   (setq which-key-idle-dely 0.3))
 
-(use-package ivy-rich
-  :init
-  (ivy-rich-mode 1))
-
 (use-package counsel
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
@@ -102,13 +97,17 @@
 	 :map minibuffer-local-map
 	 ("C-r" . 'counsel-minibuffer-history)))
 
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key)
   :custom
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
-  :bind
-  ([remap describe-function] . counsel-describe-function)
+  :bind 
+ ([remap describe-function] . counsel-describe-function)
   ([remap describe-command] . helpful-command)
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
