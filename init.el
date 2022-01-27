@@ -119,6 +119,8 @@
     (local-set-key (kbd "C-c <up>")    'hs-hide-all)
     (local-set-key (kbd "C-c <down>")  'hs-show-all)
     (hs-minor-mode t)
-    (hs-hide-all)))
-
+    (hs-hide-all)
+    (c-set-style "k&r")
+    (setq c-basic-offset 4)
+    (setq tab-width 4)))
 (use-package magit)
