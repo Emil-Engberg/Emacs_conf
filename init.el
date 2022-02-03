@@ -124,3 +124,6 @@
     (setq c-basic-offset 4)
     (setq tab-width 4)))
 (use-package magit)
+
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
