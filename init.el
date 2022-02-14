@@ -127,3 +127,8 @@
 
 (dolist (hook '(text-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
+(add-hook 'tex-mode-hook
+(fset 'compile-latex
+      [?\C-c ?\C-c ?\C-p ?\C-p ?\C-p ?\C-p ?\C-p return ?\C-x ?o ?\C-x ?o ?r ?y ?e ?s return ?\C-x ?o])
+(global-set-key (kbd "C-c a") 'compile-latex)
+)
