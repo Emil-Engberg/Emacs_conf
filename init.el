@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
+   '(pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -15,7 +15,13 @@
 (setq inhibit-startup-message t)
 
 (when (eq system-type 'darwin)
-  (setq mac-right-option-modifier 'none))
+  (setq mac-right-option-modifier 'none)
+  (getenv "PATH")
+ (setenv "PATH"
+(concat
+ "/Library/TeX/texbin" ":"
+
+(getenv "PATH"))))
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
