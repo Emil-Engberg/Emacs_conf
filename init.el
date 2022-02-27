@@ -22,11 +22,13 @@
  "/Library/TeX/texbin" ":"
 
 (getenv "PATH"))))
-
-(scroll-bar-mode -1)
+(if (display-graphic-p)
+    (progn
+      (scroll-bar-mode -1)
+      (set-fringe-mode 10)))
 (tool-bar-mode -1)
 (tooltip-mode -1)
-(set-fringe-mode 10)
+
 
 (setq split-width-threshold 1 )
 
