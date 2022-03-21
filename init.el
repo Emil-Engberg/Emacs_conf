@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
+   '(multi-term pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -51,6 +51,7 @@
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
 
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -128,7 +129,7 @@
     (local-set-key (kbd "C-c <down>")  'hs-show-all)
     (hs-minor-mode t)
     (hs-hide-all)
-    (c-set-style "k&r")
+    (c-set-style "gnu")
     (setq c-basic-offset 4)
     (setq tab-width 4)))
 (use-package magit)
@@ -140,3 +141,21 @@
       [?\C-c ?\C-c ?\C-p ?\C-p ?\C-p ?\C-p ?\C-p return ?\C-x ?o ?\C-x ?o ?r ?y ?e ?s return ?\C-x ?o])
 (global-set-key (kbd "C-c a") 'compile-latex)
 )
+(global-set-key (kbd "C-<tab>") 'dabbrev-expand)
+(define-key minibuffer-local-map (kbd "C-<tab>") 'dabbrev-expand)
+
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' `exec-path' and PATH environment variable to match
+that used by the user's shell.
+
+This is particularly useful under Mac OS X and macOS, where GUI
+apps are not started from a shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string
+			  "[ \t\n]*$" "" (shell-command-to-string
+					  "$SHELL --login -c 'echo $PATH'"
+						    ))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(set-exec-path-from-shell-PATH)
