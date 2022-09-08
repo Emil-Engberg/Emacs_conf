@@ -1,0 +1,13 @@
+(add-hook 'c-mode-common-hook
+  (lambda()
+    (local-set-key (kbd "C-c <right>") 'hs-show-block)
+    (local-set-key (kbd "C-c <left>")  'hs-hide-block)
+    (local-set-key (kbd "C-c <up>")    'hs-hide-all)
+    (local-set-key (kbd "C-c <down>")  'hs-show-all)
+    (hs-minor-mode t)
+    (hs-hide-all)
+    (c-set-style "gnu")
+    (c-set-offset 'case-label '+)
+    (setq c-basic-offset 4)
+    (setq tab-width 4)
+    (flymake-mode 1)))
