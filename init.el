@@ -15,13 +15,9 @@
 (setq inhibit-startup-message t)
 
 (when (eq system-type 'darwin)
-  (setq mac-right-option-modifier 'none)
-  (getenv "PATH")
- (setenv "PATH"
-(concat
- "/Library/TeX/texbin" ":"
+  (setq mac-right-command-modifier 'super)
+  (setq mac-right-option-modifier 'none))
 
-(getenv "PATH"))))
 (if (display-graphic-p)
     (progn
       (scroll-bar-mode -1)
@@ -121,19 +117,6 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helpful-key))
 
-(add-hook 'c-mode-common-hook
-  (lambda()
-    (local-set-key (kbd "C-c <right>") 'hs-show-block)
-    (local-set-key (kbd "C-c <left>")  'hs-hide-block)
-    (local-set-key (kbd "C-c <up>")    'hs-hide-all)
-    (local-set-key (kbd "C-c <down>")  'hs-show-all)
-    (hs-minor-mode t)
-    (hs-hide-all)
-    (c-set-style "gnu")
-    (c-set-offset 'case-label '+)
-    (setq c-basic-offset 4)
-    (setq tab-width 4)
-    (flymake-mode 1)))
 (use-package magit)
 
 (dolist (hook '(text-mode-hook))
@@ -146,45 +129,6 @@
 (global-set-key (kbd "C-<tab>") 'dabbrev-expand)
 (define-key minibuffer-local-map (kbd "C-<tab>") 'dabbrev-expand)
 
-(defun set-exec-path-from-shell-PATH ()
-  "Set up Emacs' `exec-path' and PATH environment variable to match
-that used by the user's shell.
-
-This is particularly useful under Mac OS X and macOS, where GUI
-apps are not started from a shell."
-  (interactive)
-  (let ((path-from-shell (replace-regexp-in-string
-			  "[ \t\n]*$" "" (shell-command-to-string
-					  "$SHELL --login -c 'echo $PATH'"
-						    ))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-
-(set-exec-path-from-shell-PATH)
-(autoload 'run-prolog "prolog" "Start a Prolog sub-process." t)
-(autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
-(autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
-(setq prolog-system 'swi)
-(setq auto-mode-alist (append '(("\\.pl$" . prolog-mode)
-                              ("\\.m$" . mercury-mode))
-                              auto-mode-alist))
-
-(add-hook 'prolog-mode-hook
-          (lambda ()
-            (require 'flymake)
-            (make-local-variable 'flymake-allowed-file-name-masks)
-            (make-local-variable 'flymake-err-line-patterns)
-            (setq flymake-err-line-patterns
-                  '(("ERROR: (?\\(.*?\\):\\([0-9]+\\)" 1 2)
-                    ("Warning: (\\(.*\\):\\([0-9]+\\)" 1 2)))
-            (setq flymake-allowed-file-name-masks
-                  '(("\\.pl\\'" flymake-prolog-init)))
-            (flymake-mode 1)))
-
-(defun flymake-prolog-init ()
-  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-         (local-file  (file-relative-name
-		       temp-file
-                       (file-name-directory buffer-file-name))))
-    (list "swipl" (list "-q" "-g" "use_module(library(diagnostics))" "-t" "halt" "--" "test.pl"))))
+(load "~/.emacs.d/flymake/flymake.el")
+(load "~/.emacs.d/language/c.el")
+(load "~/.emacs.d/language/prolog.el")

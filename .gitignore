@@ -1,3 +1,6 @@
 elpa
 transient
 auto-save-list
+eshell
+transient
+url
