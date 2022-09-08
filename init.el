@@ -1,0 +1,190 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(multi-term pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+(setq inhibit-startup-message t)
+
+(when (eq system-type 'darwin)
+  (setq mac-right-option-modifier 'none)
+  (getenv "PATH")
+ (setenv "PATH"
+(concat
+ "/Library/TeX/texbin" ":"
+
+(getenv "PATH"))))
+(if (display-graphic-p)
+    (progn
+      (scroll-bar-mode -1)
+      (set-fringe-mode 10)))
+(tool-bar-mode -1)
+(tooltip-mode -1)
+
+
+(setq split-width-threshold 1 )
+
+(menu-bar-mode -1)
+
+(setq visible-bell t)
+
+(set-face-attribute 'default nil :height 120)
+
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+(require 'package)
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			 ("org" . "https://orgmode.org/elpa/")
+			 ("elpa". "https://elpa.gnu.org/packages/")))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+
+(require 'use-package)
+(setq use-package-always-ensure t)
+
+(column-number-mode)
+(global-display-line-numbers-mode t)
+
+(dolist (mode '(org-mode-hook
+		term-mode-hook
+		eshell-mode-hook))
+  (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+         :map ivy-minibuffer-map
+         ("TAB" . ivy-alt-done)	
+         ("C-l" . ivy-alt-done)
+         ("C-j" . ivy-next-line)
+         ("C-k" . ivy-previous-line)
+         :map ivy-switch-buffer-map
+         ("C-k" . ivy-previous-line)
+         ("C-l" . ivy-done)
+         ("C-d" . ivy-switch-buffer-kill)
+         :map ivy-reverse-i-search-map
+         ("C-k" . ivy-previous-line)
+         ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+
+(use-package all-the-icons)
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
+
+(use-package doom-themes
+  :init (load-theme 'doom-dracula t))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-dely 0.3))
+
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+	 ("C-x b" . counsel-ibuffer)
+	 ("C-x C-f" . counsel-find-file)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history)))
+
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key)
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind 
+ ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helpful-key))
+
+(add-hook 'c-mode-common-hook
+  (lambda()
+    (local-set-key (kbd "C-c <right>") 'hs-show-block)
+    (local-set-key (kbd "C-c <left>")  'hs-hide-block)
+    (local-set-key (kbd "C-c <up>")    'hs-hide-all)
+    (local-set-key (kbd "C-c <down>")  'hs-show-all)
+    (hs-minor-mode t)
+    (hs-hide-all)
+    (c-set-style "gnu")
+    (c-set-offset 'case-label '+)
+    (setq c-basic-offset 4)
+    (setq tab-width 4)
+    (flymake-mode 1)))
+(use-package magit)
+
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(add-hook 'tex-mode-hook
+(fset 'compile-latex
+      [?\C-c ?\C-c ?\C-p ?\C-p ?\C-p ?\C-p ?\C-p return ?\C-x ?o ?\C-x ?o ?r ?y ?e ?s return ?\C-x ?o])
+(global-set-key (kbd "C-c a") 'compile-latex)
+)
+(global-set-key (kbd "C-<tab>") 'dabbrev-expand)
+(define-key minibuffer-local-map (kbd "C-<tab>") 'dabbrev-expand)
+
+(defun set-exec-path-from-shell-PATH ()
+  "Set up Emacs' `exec-path' and PATH environment variable to match
+that used by the user's shell.
+
+This is particularly useful under Mac OS X and macOS, where GUI
+apps are not started from a shell."
+  (interactive)
+  (let ((path-from-shell (replace-regexp-in-string
+			  "[ \t\n]*$" "" (shell-command-to-string
+					  "$SHELL --login -c 'echo $PATH'"
+						    ))))
+    (setenv "PATH" path-from-shell)
+    (setq exec-path (split-string path-from-shell path-separator))))
+
+(set-exec-path-from-shell-PATH)
+(autoload 'run-prolog "prolog" "Start a Prolog sub-process." t)
+(autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
+(autoload 'mercury-mode "prolog" "Major mode for editing Mercury programs." t)
+(setq prolog-system 'swi)
+(setq auto-mode-alist (append '(("\\.pl$" . prolog-mode)
+                              ("\\.m$" . mercury-mode))
+                              auto-mode-alist))
+
+(add-hook 'prolog-mode-hook
+          (lambda ()
+            (require 'flymake)
+            (make-local-variable 'flymake-allowed-file-name-masks)
+            (make-local-variable 'flymake-err-line-patterns)
+            (setq flymake-err-line-patterns
+                  '(("ERROR: (?\\(.*?\\):\\([0-9]+\\)" 1 2)
+                    ("Warning: (\\(.*\\):\\([0-9]+\\)" 1 2)))
+            (setq flymake-allowed-file-name-masks
+                  '(("\\.pl\\'" flymake-prolog-init)))
+            (flymake-mode 1)))
+
+(defun flymake-prolog-init ()
+  (let* ((temp-file   (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+         (local-file  (file-relative-name
+		       temp-file
+                       (file-name-directory buffer-file-name))))
+    (list "swipl" (list "-q" "-g" "use_module(library(diagnostics))" "-t" "halt" "--" "test.pl"))))
