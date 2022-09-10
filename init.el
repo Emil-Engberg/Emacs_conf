@@ -14,14 +14,7 @@
 
 (setq inhibit-startup-message t)
 
-(when (eq system-type 'darwin)
-  (setq mac-right-option-modifier 'none)
-  (getenv "PATH")
- (setenv "PATH"
-(concat
- "/Library/TeX/texbin" ":"
 
-(getenv "PATH"))))
 (if (display-graphic-p)
     (progn
       (scroll-bar-mode -1)
@@ -136,3 +129,4 @@
 (load "~/.emacs.d/language/c.el")
 (load "~/.emacs.d/language/prolog.el")
 (load "~/.emacs.d/flymake/flymake.el")
+(load "~/.emacs.d/os/mac.el")
