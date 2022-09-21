@@ -128,3 +128,22 @@
 (load "~/.emacs.d/language/prolog.el")
 (load "~/.emacs.d/flymake/flymake.el")
 (load "~/.emacs.d/os/mac.el")
+
+(use-package switch-window
+  :ensure t
+  :bind
+  ;; default C-x o is other-window
+  ;; default C-x C-o is delete-blank-lines
+  (("C-x o" . switch-window)
+   ("C-x C-o" . switch-window))
+  :config
+  (setq switch-window-multiple-frames t)
+  (setq switch-window-shortcut-style 'qwerty)
+  ;; when Emacs is run as client, the first shortcut does not appear
+  ;; "x" acts as a dummy; remove first entry if not running server
+  (setq switch-window-qwerty-shortcuts '("x" "a" "s" "d" "f" "j" "k" "l" ";" "w" "e" "r" "u" "i" "o" "q" "t" "y" "p"))
+  (setq switch-window-increase 3))
+
+(require 'switch-window)
+(global-set-key (kbd "C-x o") 'switch-window)
+(setq switch-window-multiple-frames t)
