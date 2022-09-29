@@ -22,6 +22,7 @@
 (tool-bar-mode -1)
 (tooltip-mode -1)
 
+(scroll-bar-mode -1)
 
 (setq split-width-threshold 1 )
 
@@ -147,3 +148,37 @@
 (require 'switch-window)
 (global-set-key (kbd "C-x o") 'switch-window)
 (setq switch-window-multiple-frames t)
+
+
+
+(require 'exwm)
+(setq display-time-default-load-average nil)
+(display-time-mode t)
+(setq exwm-workspace-number 4)
+(setq exwm-input-global-keys
+      `(
+	 ;; Bind "s-r" to exit char-mode and fullscreen mode.
+        ([?\s-r] . exwm-reset)
+        ;; Bind "s-w" to switch workspace interactively.
+        ([?\s-w] . exwm-workspace-switch)
+        ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
+        ,@(mapcar (lambda (i)
+                    `(,(kbd (format "s-%d" i)) .
+                      (lambda ()
+                        (interactive)
+                        (exwm-workspace-switch-create ,i))))
+                  (number-sequence 0 9))
+	([?\s-&] . (lambda (command)
+		     (interactive (list (read-shell-command "$ ")))
+		     (start-process-shell-command command nil command)))))
+
+(require 'exwm-randr)
+(setq exwm-randr-workspace-output-plist '(1 "HDMI-0"))
+(add-hook 'exwm-randr-screen-change-hook
+          (lambda ()
+            (start-process-shell-command
+             "xrandr" nil "xrandr --output HDMI-0 --right-of DVI-D-0 --auto")))
+(exwm-randr-enable)
+(require 'exwm-systemtray)
+(exwm-systemtray-enable)
+(exwm-enable)
