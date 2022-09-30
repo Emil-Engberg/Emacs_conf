@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(multi-term pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
+   '(company auctex switch-window multi-term pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -116,11 +116,6 @@
 
 (dolist (hook '(text-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
-(add-hook 'tex-mode-hook
-(fset 'compile-latex
-      [?\C-c ?\C-c ?\C-p ?\C-p ?\C-p ?\C-p ?\C-p return ?\C-x ?o ?\C-x ?o ?r ?y ?e ?s return ?\C-x ?o])
-(global-set-key (kbd "C-c a") 'compile-latex)
-)
 (global-set-key (kbd "C-<tab>") 'dabbrev-expand)
 (define-key minibuffer-local-map (kbd "C-<tab>") 'dabbrev-expand)
 
@@ -128,6 +123,7 @@
 (load "~/.emacs.d/language/prolog.el")
 (load "~/.emacs.d/flymake/flymake.el")
 (load "~/.emacs.d/os/mac.el")
+(load "~/.emacs.d/language/tex.el")
 
 (use-package switch-window
   :ensure t
