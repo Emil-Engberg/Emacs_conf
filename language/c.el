@@ -10,4 +10,5 @@
     (c-set-offset 'case-label '+)
     (setq c-basic-offset 4)
     (setq tab-width 4)
-    (flymake-mode 1)))
+    (flymake-mode 1)
+    (company-mode 1)))

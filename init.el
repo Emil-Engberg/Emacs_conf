@@ -13,8 +13,6 @@
  )
 
 (setq inhibit-startup-message t)
-
-
 (if (display-graphic-p)
     (progn
       (scroll-bar-mode -1)
@@ -23,13 +21,11 @@
 (tooltip-mode -1)
 
 (scroll-bar-mode -1)
-
 (setq split-width-threshold 1 )
 
 (menu-bar-mode -1)
 
 (setq visible-bell t)
-
 (set-face-attribute 'default nil :height 120)
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -145,11 +141,11 @@
 (global-set-key (kbd "C-x o") 'switch-window)
 (setq switch-window-multiple-frames t)
 
-
-
+(setq display-time-day-and-date t
+      display-time-24hr-format t)
+(display-time)
+(display-battery-mode 1)
 (require 'exwm)
-(setq display-time-default-load-average nil)
-(display-time-mode t)
 (setq exwm-workspace-number 4)
 (setq exwm-input-global-keys
       `(
