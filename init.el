@@ -144,3 +144,5 @@
       display-time-24hr-format t)
 (display-time)
 (display-battery-mode 1)
+(use-package nix-mode
+  :mode "\\.nix\\'")
