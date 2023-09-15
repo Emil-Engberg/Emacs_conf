@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(company auctex switch-window multi-term pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
+   '(nix-mode company auctex switch-window multi-term pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -144,5 +144,24 @@
       display-time-24hr-format t)
 (display-time)
 (display-battery-mode 1)
-(use-package nix-mode
-  :mode "\\.nix\\'")
+(require 'exwm)
+(require 'exwm-config)
+(exwm-config-example)
+
+(require 'exwm-randr)
+(setq exwm-randr-workspace-output-plist '(1 "DP-1" 2 "DP-3" 3 "HDMI-3"))
+(add-hook 'exwm-randr-screen-change-hook
+          (lambda ()
+            (start-process-shell-command
+             "xrandr" nil "xrandr --output DP-3 --rate 165 --left-of DP-1 --left-of HDMI-3 --auto")))
+(exwm-randr-enable)
+
+(require 'exwm-systemtray)
+(exwm-systemtray-enable)
+
+(defun pavucontrol ()
+(interactive)
+(call-process-shell-command "pavucontrol" nil 0))
+
+(exwm-input-set-key (kbd "C-c p") 'pavucontrol)
+(global-set-key (kbd "s-<return>") 'ansi-term)
