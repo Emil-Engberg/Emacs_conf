@@ -1,5 +1,5 @@
-(custom-set-variables
  ;; custom-set-variables was added by Custom.
+(custom-set-variables
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
@@ -197,7 +197,7 @@
 (require 'exwm-randr)
 (if (checkname "arch-desktop")
     (progn
-      (setq exwm-randr-workspace-output-plist '(0 "DP-1" 1 "DP-3" 2 "HDMI-3"))
+      (setq exwm-randr-workspace-output-plist '(1 "DP-1" 2 "DP-3" 3 "HDMI-3"))
       (add-hook 'exwm-randr-screen-change-hook
 		(lambda ()
 		  (start-process-shell-command
