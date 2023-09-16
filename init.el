@@ -4,7 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(nix-mode company auctex switch-window multi-term pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
+   '(exwm-mff xpm nix-mode company auctex switch-window multi-term pdf-tools magit general doom-themes all-the-icons counsel helpful ivy-rich which-key rainbow-delimiters doom-modeline use-package ivy)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -145,8 +145,7 @@
 (display-time)
 (display-battery-mode 1)
 (require 'exwm)
-(require 'exwm-config)
-
+(require 'exwm-mff)
 (unless (get 'exwm-workspace-number 'saved-value)
     (setq exwm-workspace-number 4))
   ;; Make class name the buffer name
@@ -185,7 +184,8 @@
             ([?\C-v] . [next])
             ([?\C-d] . [delete])
             ([?\C-k] . [S-end delete]))))
-  ;; Enable EXWM
+;; Enable EXWM
+  (exwm-mff-mode 1)
   (exwm-enable)
 
 (defun checkname (name)
@@ -203,6 +203,15 @@
 		  (start-process-shell-command
 		   "xrandr" nil "xrandr --output DP-3 --mode 1920x1080 --rate 165 --left-of DP-1 --left-of HDMI-3 --auto")))
       (exwm-randr-enable)))
+(if (checkname "arch-laptop")
+    (progn
+      (setq exwm-randr-workspace-output-plist '(1 "eDP-2"))
+      (add-hook 'exwm-randr-screen-change-hook
+		(lambda ()
+		  (start-process-shell-command
+		   "xrandr" nil "xrandr --output eDP-2 --mode 1920x1200 --rate 165 --auto")))
+      (exwm-randr-enable)
+      (call-process-shell-command "rog-control-center" nil 0)))
 
 (require 'exwm-systemtray)
 (exwm-systemtray-enable)
@@ -224,9 +233,10 @@
   (kmacro "C-x 3 M-x other-window <return> M-x a n s i - t e r m <return> <return>"))
 
 (defalias 'close-program
-   (kmacro "C-x k <return> C-x 0"))
+  (kmacro "C-x k <return> C-x 0"))
 
 (exwm-input-set-key (kbd "C-c p") 'pavucontrol)
+(exwm-input-set-key (kbd "s-f") 'exwm-floating-toggle-floating)
 (exwm-input-set-key (kbd "s-<return>") 'terminal)
 (exwm-input-set-key (kbd "s-q") 'close-program)
 (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") 'raisevolume)
