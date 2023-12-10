@@ -120,6 +120,7 @@
 (load "~/.emacs.d/flymake/flymake.el")
 (load "~/.emacs.d/os/mac.el")
 (load "~/.emacs.d/language/tex.el")
+(load "~/.emacs.d/language/nix.el")
 
 (use-package switch-window
   :ensure t
@@ -144,101 +145,101 @@
       display-time-24hr-format t)
 (display-time)
 (display-battery-mode 1)
-(require 'exwm)
-(require 'exwm-mff)
-(unless (get 'exwm-workspace-number 'saved-value)
-    (setq exwm-workspace-number 4))
-  ;; Make class name the buffer name
-  (add-hook 'exwm-update-class-hook
-            (lambda ()
-              (exwm-workspace-rename-buffer exwm-class-name)))
-  ;; Global keybindings.
-  (unless (get 'exwm-input-global-keys 'saved-value)
-    (setq exwm-input-global-keys
-          `(
-            ;; 's-r': Reset (to line-mode).
-            ([?\s-r] . exwm-reset)
-            ;; 's-w': Switch workspace.
-            ([?\s-w] . exwm-workspace-switch)
-            ;; 's-&': Launch application.
-            ([?\s-d] . (lambda (command)
-                         (interactive (list (read-shell-command "$ ")))
-                         (start-process-shell-command command nil command)))
-            ;; 's-N': Switch to certain workspace.
-            ,@(mapcar (lambda (i)
-                        `(,(kbd (format "s-%d" i)) .
-                          (lambda ()
-                            (interactive)
-                            (exwm-workspace-switch-create ,i))))
-                      (number-sequence 0 9)))))
-  ;; Line-editing shortcuts
-  (unless (get 'exwm-input-simulation-keys 'saved-value)
-    (setq exwm-input-simulation-keys
-          '(([?\C-b] . [left])
-            ([?\C-f] . [right])
-            ([?\C-p] . [up])
-            ([?\C-n] . [down])
-            ([?\C-a] . [home])
-            ([?\C-e] . [end])
-            ([?\M-v] . [prior])
-            ([?\C-v] . [next])
-            ([?\C-d] . [delete])
-            ([?\C-k] . [S-end delete]))))
-;; Enable EXWM
-  (exwm-mff-mode 1)
-  (exwm-enable)
+;; (require 'exwm)
+;; (require 'exwm-mff)
+;; (unless (get 'exwm-workspace-number 'saved-value)
+;;     (setq exwm-workspace-number 4))
+;;   ;; Make class name the buffer name
+;;   (add-hook 'exwm-update-class-hook
+;;             (lambda ()
+;;               (exwm-workspace-rename-buffer exwm-class-name)))
+;;   ;; Global keybindings.
+;;   (unless (get 'exwm-input-global-keys 'saved-value)
+;;     (setq exwm-input-global-keys
+;;           `(
+;;             ;; 's-r': Reset (to line-mode).
+;;             ([?\s-r] . exwm-reset)
+;;             ;; 's-w': Switch workspace.
+;;             ([?\s-w] . exwm-workspace-switch)
+;;             ;; 's-&': Launch application.
+;;             ([?\s-d] . (lambda (command)
+;;                          (interactive (list (read-shell-command "$ ")))
+;;                          (start-process-shell-command command nil command)))
+;;             ;; 's-N': Switch to certain workspace.
+;;             ,@(mapcar (lambda (i)
+;;                         `(,(kbd (format "s-%d" i)) .
+;;                           (lambda ()
+;;                             (interactive)
+;;                             (exwm-workspace-switch-create ,i))))
+;;                       (number-sequence 0 9)))))
+;;   ;; Line-editing shortcuts
+;;   (unless (get 'exwm-input-simulation-keys 'saved-value)
+;;     (setq exwm-input-simulation-keys
+;;           '(([?\C-b] . [left])
+;;             ([?\C-f] . [right])
+;;             ([?\C-p] . [up])
+;;             ([?\C-n] . [down])
+;;             ([?\C-a] . [home])
+;;             ([?\C-e] . [end])
+;;             ([?\M-v] . [prior])
+;;             ([?\C-v] . [next])
+;;             ([?\C-d] . [delete])
+;;             ([?\C-k] . [S-end delete]))))
+;; ;; Enable EXWM
+;;   (exwm-mff-mode 1)
+;;   (exwm-enable)
 
-(defun checkname (name)
-  "Return true if the system we are running on is the same as name"
-  (or
-    (string-equal system-name name)
-    (string-equal system-name (concat name ".lan"))
-    ))
-(require 'exwm-randr)
-(if (checkname "arch-desktop")
-    (progn
-      (setq exwm-randr-workspace-output-plist '(1 "DP-1" 2 "DP-3" 3 "HDMI-3"))
-      (add-hook 'exwm-randr-screen-change-hook
-		(lambda ()
-		  (start-process-shell-command
-		   "xrandr" nil "xrandr --output DP-3 --mode 1920x1080 --rate 165 --left-of DP-1 --left-of HDMI-3 --auto")))
-      (exwm-randr-enable)))
-(if (checkname "arch-laptop")
-    (progn
-      (setq exwm-randr-workspace-output-plist '(1 "eDP-2"))
-      (add-hook 'exwm-randr-screen-change-hook
-		(lambda ()
-		  (start-process-shell-command
-		   "xrandr" nil "xrandr --output eDP-2 --mode 1920x1200 --rate 165 --auto")))
-      (exwm-randr-enable)
-      (call-process-shell-command "rog-control-center" nil 0)))
+;; (defun checkname (name)
+;;   "Return true if the system we are running on is the same as name"
+;;   (or
+;;     (string-equal system-name name)
+;;     (string-equal system-name (concat name ".lan"))
+;;     ))
+;; (require 'exwm-randr)
+;; (if (checkname "arch-desktop")
+;;     (progn
+;;       (setq exwm-randr-workspace-output-plist '(1 "DP-1" 2 "DP-3" 3 "HDMI-3"))
+;;       (add-hook 'exwm-randr-screen-change-hook
+;; 		(lambda ()
+;; 		  (start-process-shell-command
+;; 		   "xrandr" nil "xrandr --output DP-3 --mode 1920x1080 --rate 165 --left-of DP-1 --left-of HDMI-3 --auto")))
+;;       (exwm-randr-enable)))
+;; (if (checkname "arch-laptop")
+;;     (progn
+;;       (setq exwm-randr-workspace-output-plist '(1 "eDP-2"))
+;;       (add-hook 'exwm-randr-screen-change-hook
+;; 		(lambda ()
+;; 		  (start-process-shell-command
+;; 		   "xrandr" nil "xrandr --output eDP-2 --mode 1920x1200 --rate 165 --auto")))
+;;       (exwm-randr-enable)
+;;       (call-process-shell-command "rog-control-center" nil 0)))
 
-(require 'exwm-systemtray)
-(exwm-systemtray-enable)
+;; (require 'exwm-systemtray)
+;; (exwm-systemtray-enable)
 
-(defun pavucontrol ()
-  (interactive)
-  (call-process-shell-command "pavucontrol" nil 0))
+;; (defun pavucontrol ()
+;;   (interactive)
+;;   (call-process-shell-command "pavucontrol" nil 0))
 
 
-(defun lowervolume ()
-    (interactive)
-  (call-process-shell-command "pactl set-sink-volume @DEFAULT_SINK@ -5%" nil 0))
+;; (defun lowervolume ()
+;;     (interactive)
+;;   (call-process-shell-command "pactl set-sink-volume @DEFAULT_SINK@ -5%" nil 0))
 
-(defun raisevolume ()
-    (interactive)
-  (call-process-shell-command "pactl set-sink-volume @DEFAULT_SINK@ +5%" nil 0))
+;; (defun raisevolume ()
+;;     (interactive)
+;;   (call-process-shell-command "pactl set-sink-volume @DEFAULT_SINK@ +5%" nil 0))
 
-(defalias 'terminal
-  (kmacro "C-x 3 M-x other-window <return> M-x a n s i - t e r m <return> <return>"))
+;; (defalias 'terminal
+;;   (kmacro "C-x 3 M-x other-window <return> M-x a n s i - t e r m <return> <return>"))
 
-(defalias 'close-program
-  (kmacro "C-x k <return> C-x 0"))
+;; (defalias 'close-program
+;;   (kmacro "C-x k <return> C-x 0"))
 
-(exwm-input-set-key (kbd "C-c p") 'pavucontrol)
-(exwm-input-set-key (kbd "s-f") 'exwm-floating-toggle-floating)
-(exwm-input-set-key (kbd "s-<return>") 'terminal)
-(exwm-input-set-key (kbd "s-q") 'close-program)
-(exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") 'raisevolume)
+;; (exwm-input-set-key (kbd "C-c p") 'pavucontrol)
+;; (exwm-input-set-key (kbd "s-f") 'exwm-floating-toggle-floating)
+;; (exwm-input-set-key (kbd "s-<return>") 'terminal)
+;; (exwm-input-set-key (kbd "s-q") 'close-program)
+;; (exwm-input-set-key (kbd "<XF86AudioRaiseVolume>") 'raisevolume)
 
-(exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'lowervolume)
+;; (exwm-input-set-key (kbd "<XF86AudioLowerVolume>") 'lowervolume)
